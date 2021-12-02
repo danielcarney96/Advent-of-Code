@@ -25,7 +25,7 @@ pub fn part_one() {
             "up" => {
                 depth -= value;
             },
-            _ => panic!()
+            _ => ()
         }
     }
 
