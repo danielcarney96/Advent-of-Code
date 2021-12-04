@@ -1,5 +1,6 @@
 fn main() {
     part_one();
+    part_two();
 }
 
 fn most_common(lines: &Vec<u32>, index: usize) -> u32 {
@@ -38,4 +39,41 @@ fn part_one() {
 
     // Finally times gamma by its inverse. We need `0xfff` here to truncate the inverse.
     println!("{}", gamma * (!gamma & 0xfff));
+}
+
+fn part_two() {
+    // Include the txt file as a string, split into lines and map into u32
+    let mut lines: Vec<u32> = include_str!("../input.txt")
+        .lines()
+        .map(|line| u32::from_str_radix(line, 2).unwrap())
+        .collect();
+
+    // Copy the lines to calculate least common
+    let mut lines_2: Vec<u32> = lines.clone();
+
+    // Loop in reverse as the order affects the outcome, `most_common` looks at the last bit first
+    for i in (0..12).rev() {
+        /**
+         * Least common is not always the inverse of common since we use different line
+         * vectors for each.
+         */
+        let common: u32 = most_common(&lines, i);
+        let least_common: u32 = most_common(&lines_2, i);
+
+        // Retain any line that matches the most common bit for a given position
+        if lines.len() > 1 {
+            lines.retain(|line| (line >> i) & 1 == common ^ 1);
+        }
+        
+        if lines_2.len() > 1 {
+            lines_2.retain(|line| (line >> i) & 1 == least_common ^ 0);
+        }
+
+        // Break if only 1 result is remaining in each vec
+        if (lines.len() == 1 && lines_2.len() == 1) {
+            break;
+        }
+    }
+
+    println!("{}", lines[0] * lines_2[0]);
 }
