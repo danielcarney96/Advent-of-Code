@@ -1,5 +1,4 @@
-# Advent of Code 2021
+# Advent of Code
 
-This repo holds the solutions for each of the advent of code challenges written in Rust.
-
-Challenges can be found here: https://adventofcode.com/
+This repo holds the solutions for advent of code, grouped by year.
+Each year using a different language.
