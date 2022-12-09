@@ -87,27 +87,40 @@ func main() {
 		}
 	}
 
-	sum := 0
-	directorySize(fileSystem, &sum)
+	dirSizes := getDirectorySizes(fileSystem)
 
-	fmt.Println(directorySize(fileSystem, &sum))
+	sum := 0
+
+	for _, dirSize := range dirSizes {
+		if dirSize <= 100000 {
+			sum += dirSize
+		}
+	}
+
+	fmt.Printf("Part 1: %d\n", sum)
 }
 
-func directorySize(dir directory, sum *int) int {
-	sumOfCurrent := 0
+func getDirectorySizes(dir directory) []int {
+	var dirSizes []int
 
-	for _, file := range dir.files {
-		intval, _ := strconv.Atoi(file.size)
-		sumOfCurrent += intval
+	var calculateSize func(input directory) int
+	calculateSize = func(input directory) int {
+		sum := 0
+
+		for _, file := range input.files {
+			sizeVal, _ := strconv.Atoi(file.size)
+			sum += sizeVal
+		}
+
+		for _, subDir := range input.directories {
+			sum += calculateSize(subDir)
+		}
+
+		dirSizes = append(dirSizes, sum)
+		return sum
 	}
 
-	for _, subDir := range dir.directories {
-		sumOfCurrent += directorySize(subDir, sum)
-	}
+	calculateSize(dir)
 
-	if sumOfCurrent < 100000 {
-		*sum += sumOfCurrent
-	}
-
-	return *sum
+	return dirSizes
 }
