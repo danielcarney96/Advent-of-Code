@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -98,6 +99,24 @@ func main() {
 	}
 
 	fmt.Printf("Part 1: %d\n", sum)
+
+	sort.Slice(dirSizes, func(a, b int) bool {
+		return dirSizes[a] > dirSizes[b]
+	})
+
+	requiredSpace := (70000000 - dirSizes[0] - 30000000) * -1
+
+	var suitableDirs []int
+
+	for _, dirSize := range dirSizes {
+		if dirSize >= requiredSpace {
+			suitableDirs = append(suitableDirs, dirSize)
+		}
+	}
+
+	smallest := suitableDirs[len(suitableDirs)-1]
+
+	fmt.Printf("Part 2: %d\n", smallest)
 }
 
 func getDirectorySizes(dir directory) []int {
