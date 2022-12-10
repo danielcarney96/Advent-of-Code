@@ -41,7 +41,6 @@ func calculateVisibleTrees(grid [][]int) int {
 				continue
 			}
 
-			// check right
 			visible := true
 			for z := 0; z < y; z++ {
 				if grid[x][z] >= grid[x][y] {
@@ -54,7 +53,6 @@ func calculateVisibleTrees(grid [][]int) int {
 				continue
 			}
 
-			// check left
 			visible = true
 			for z := length - 1; z > y; z-- {
 				if grid[x][z] >= grid[x][y] {
@@ -67,7 +65,6 @@ func calculateVisibleTrees(grid [][]int) int {
 				continue
 			}
 
-			// check bottom
 			visible = true
 			for z := 0; z < x; z++ {
 				if grid[z][y] >= grid[x][y] {
@@ -80,7 +77,6 @@ func calculateVisibleTrees(grid [][]int) int {
 				continue
 			}
 
-			// check top
 			visible = true
 			for z := length - 1; z > x; z-- {
 				if grid[z][y] >= grid[x][y] {
