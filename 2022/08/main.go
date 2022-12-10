@@ -25,8 +25,12 @@ func main() {
 		grid = append(grid, chars)
 	}
 
-	length := len(grid)
+	fmt.Printf("Part 1: %d\n", calculateVisibleTrees(grid))
+}
+
+func calculateVisibleTrees(grid [][]int) int {
 	visibleTrees := 0
+	length := len(grid)
 
 	for x := 0; x < length; x++ {
 		for y := 0; y < length; y++ {
@@ -90,5 +94,5 @@ func main() {
 		}
 	}
 
-	fmt.Printf("Part 1: %d\n", visibleTrees)
+	return visibleTrees
 }
