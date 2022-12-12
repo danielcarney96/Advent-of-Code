@@ -15,10 +15,6 @@ type position struct {
 }
 
 func main() {
-	part1()
-}
-
-func part1() {
 	file, _ := os.Open("input.txt")
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -41,10 +37,54 @@ func part1() {
 		direction := instruction[0]
 		amount, _ := strconv.Atoi(instruction[1])
 
-		tailPositionsVisited = append(
-			tailPositionsVisited,
-			makeMove(&headPosition, &tailPosition, amount, direction)...,
-		)
+		for i := 0; i < amount; i++ {
+			xMove := 0
+			yMove := 0
+
+			if direction == "L" {
+				xMove = -1
+			} else if direction == "R" {
+				xMove = 1
+			}
+
+			if direction == "D" {
+				yMove = 1
+			} else if direction == "U" {
+				yMove = -1
+			}
+
+			headPosition.x += xMove
+			headPosition.y += yMove
+
+			xMinus := headPosition.x - tailPosition.x
+			yMinus := headPosition.y - tailPosition.y
+
+			if math.Abs(float64(xMinus)) > 1 || math.Abs(float64(yMinus)) > 1 {
+				if xMinus == 0 {
+					tailPosition.y += int(math.Floor(float64(yMinus) / float64(2)))
+				} else if yMinus == 0 {
+					tailPosition.x += int(math.Floor(float64(xMinus) / float64(2)))
+				} else {
+					if xMinus > 0 {
+						tailPosition.x += 1
+					} else {
+						tailPosition.x -= 1
+					}
+
+					if yMinus > 0 {
+						tailPosition.y += 1
+					} else {
+						tailPosition.y -= 1
+					}
+				}
+			}
+
+			tailPositionsVisited = append(
+				tailPositionsVisited,
+				tailPosition,
+			)
+		}
+
 	}
 
 	var tailPositionsVisitedNoDuplicates []position
@@ -64,59 +104,5 @@ func part1() {
 		}
 	}
 
-	fmt.Printf("Part 1: %d\n", len(tailPositionsVisitedNoDuplicates))
-}
-
-func makeMove(leadingPosition *position, trailingPosition *position, amount int, direction string) []position {
-	var trailingMovesMade []position
-
-	for i := 0; i < amount; i++ {
-		xMove := 0
-		yMove := 0
-
-		if direction == "L" {
-			xMove = -1
-		} else if direction == "R" {
-			xMove = 1
-		}
-
-		if direction == "D" {
-			yMove = 1
-		} else if direction == "U" {
-			yMove = -1
-		}
-
-		leadingPosition.x += xMove
-		leadingPosition.y += yMove
-
-		xMinus := leadingPosition.x - trailingPosition.x
-		yMinus := leadingPosition.y - trailingPosition.y
-
-		if math.Abs(float64(xMinus)) > 1 || math.Abs(float64(yMinus)) > 1 {
-			if xMinus == 0 {
-				trailingPosition.y += int(math.Floor(float64(yMinus) / float64(2)))
-			} else if yMinus == 0 {
-				trailingPosition.x += int(math.Floor(float64(xMinus) / float64(2)))
-			} else {
-				if xMinus > 0 {
-					trailingPosition.x += 1
-				} else {
-					trailingPosition.x -= 1
-				}
-
-				if yMinus > 0 {
-					trailingPosition.y += 1
-				} else {
-					trailingPosition.y -= 1
-				}
-			}
-		}
-
-		trailingMovesMade = append(
-			trailingMovesMade,
-			*trailingPosition,
-		)
-	}
-
-	return trailingMovesMade
+	fmt.Println(len(tailPositionsVisitedNoDuplicates))
 }
