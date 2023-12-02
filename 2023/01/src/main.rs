@@ -31,7 +31,7 @@ fn part1() {
         sum += line_result.parse::<i32>().unwrap();
     });
 
-    println!("{}", sum);
+    println!("Part 1: {}", sum);
 }
 
 fn part2() {
@@ -91,12 +91,10 @@ fn part2() {
             last_number = first_number;
         }
 
-        println!("{}{}", first_number.unwrap(), last_number.unwrap());
-
         sum += format!("{}{}", first_number.unwrap(), last_number.unwrap())
             .parse::<i32>()
             .unwrap();
     });
 
-    println!("{}", sum);
+    println!("Part 2: {}", sum);
 }
