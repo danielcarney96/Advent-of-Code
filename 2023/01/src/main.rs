@@ -50,14 +50,12 @@ fn part2() {
         let mut last_number_index: Option<usize> = None;
 
         for (index, num_as_string) in NUMBERS_AS_STRING.iter().enumerate() {
-            let numerical_found_at = line.find(index.to_string().as_str());
-            let string_found_at = line.find(num_as_string);
-            // let test_match_thing: Vec<_> = line.match_indices(index.to_string().as_str()).collect();
-
-            // println!("{:?}", test_match_thing);
+            let numerical_found_at: Vec<_> =
+                line.match_indices(index.to_string().as_str()).collect();
+            let string_found_at: Vec<_> = line.match_indices(num_as_string).collect();
 
             // Nothing found on this line
-            if numerical_found_at == None && string_found_at == None {
+            if numerical_found_at.len() < 1 && string_found_at.len() < 1 {
                 continue;
             }
 
@@ -77,8 +75,12 @@ fn part2() {
                 }
             };
 
-            update_numbers(numerical_found_at);
-            update_numbers(string_found_at);
+            numerical_found_at.iter().for_each(|(found_at, _)| {
+                update_numbers(Some(*found_at));
+            });
+            string_found_at.iter().for_each(|(found_at, _)| {
+                update_numbers(Some(*found_at));
+            });
         }
 
         // To cover instances where only one number exists in the line
