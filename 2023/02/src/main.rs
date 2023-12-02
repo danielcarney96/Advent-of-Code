@@ -1,17 +1,17 @@
 use regex::Regex;
-use std::{fs, io};
+use std::fs;
 
 fn main() {
-    part1();
-    part2();
+    let input: String = fs::read_to_string("./input.txt").unwrap();
+
+    part1(&input);
+    part2(&input);
 }
 
-fn part1() {
-    let content: Result<String, io::Error> = fs::read_to_string("./input.txt");
-
+fn part1(input: &String) {
     let mut sum: i32 = 0;
 
-    for (line_index, line) in content.unwrap().lines().enumerate() {
+    for (line_index, line) in input.lines().enumerate() {
         let (highest_red, highest_green, highest_blue) = find_highest_for_each_colour_in_line(line);
 
         if highest_red < 13 && highest_green < 14 && highest_blue < 15 {
@@ -22,12 +22,10 @@ fn part1() {
     println!("Part 1: {}", sum);
 }
 
-fn part2() {
-    let content: Result<String, io::Error> = fs::read_to_string("./input.txt");
-
+fn part2(input: &String) {
     let mut sum: i32 = 0;
 
-    for (_, line) in content.unwrap().lines().enumerate() {
+    for (_, line) in input.lines().enumerate() {
         let (highest_red, highest_green, highest_blue) = find_highest_for_each_colour_in_line(line);
 
         sum += highest_red * highest_green * highest_blue;
