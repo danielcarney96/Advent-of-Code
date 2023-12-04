@@ -65,15 +65,13 @@ fn part2(input: &String) {
 
         sum += line.1;
 
-        for _ in 0..line.1 {
-            for j in 0..line.0 {
-                let line_to_update = wins_for_each_line[&((i + 1) as i32 + j)];
+        for j in 0..line.0 {
+            let line_to_update = wins_for_each_line[&((i + 1) as i32 + j)];
 
-                *wins_for_each_line
-                    .entry(((i + 1) as i32 + j) as i32)
-                    .or_insert((line_to_update.0, line_to_update.1)) =
-                    (line_to_update.0, line_to_update.1 + 1);
-            }
+            *wins_for_each_line
+                .entry(((i + 1) as i32 + j) as i32)
+                .or_insert((line_to_update.0, line_to_update.1)) =
+                (line_to_update.0, line_to_update.1 + 1 * line.1);
         }
     }
 
