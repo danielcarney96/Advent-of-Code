@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs, ops::Range};
+use std::{collections::HashMap, fs};
 
 fn main() {
     let input: String = fs::read_to_string("./input.txt").unwrap();
@@ -97,64 +97,29 @@ fn part2(input: &String) {
             });
     }
 
-    let mut min_source: i64 = i64::MAX;
-
-    for seed_index in (0..seeds.len()).step_by(2) {
-        let mut ranges: Vec<Range<i64>> =
-            vec![seeds[seed_index]..seeds[seed_index] + seeds[seed_index + 1]];
-
-        for group_index in 0..groups.len() {
-            let group = groups.get(&(group_index as i64)).unwrap();
-
-            for group_line_index in 0..group.len() {
-                ranges = find_destination_from_range(ranges, group[group_line_index]);
+    let result = seeds
+        .iter()
+        .enumerate()
+        .step_by(2)
+        .map(|(i, &seed)| seed..seed + seeds[i + 1])
+        .flat_map(|range| range)
+        .map(|seed| {
+            let mut source = seed;
+            for (_, group) in &groups {
+                source = find_destination_from_source(source, group);
             }
-        }
+            source
+        })
+        .min();
 
-        min_source = min_source.min(ranges.iter().map(|range| range.start).min().unwrap());
-    }
-
-    println!("Part 2: {}", min_source);
+    println!("Part 2: {}", result.unwrap());
 }
 
-fn find_destination_from_source(source: i64, group: &Vec<(i64, i64, i64)>) -> i64 {
-    for i in 0..group.len() {
-        if source >= group[i].1 && source < group[i].1 + group[i].2 {
-            return group[i].0 + (source - group[i].1);
-        }
-    }
-
-    return source;
-}
-
-fn find_destination_from_range(
-    seed_ranges: Vec<Range<i64>>,
-    group_line: (i64, i64, i64),
-) -> Vec<Range<i64>> {
-    let mut new_ranges = Vec::new();
-
-    for i in 0..seed_ranges.len() {
-        let group_line_range = group_line.1..group_line.1 + group_line.2;
-
-        let intersection = seed_ranges[i].start.max(group_line_range.start)
-            ..=seed_ranges[i].end.min(group_line_range.end);
-
-        if intersection.is_empty() {
-            new_ranges.push(seed_ranges[i].clone());
-        } else {
-            if *intersection.start() > seed_ranges[i].start {
-                new_ranges.push(seed_ranges[i].start..*intersection.start());
-            }
-            if *intersection.end() < seed_ranges[i].end {
-                new_ranges.push(seed_ranges[i].end..*intersection.end());
-            }
-
-            new_ranges.push(
-                group_line.0 + intersection.start() - group_line.1
-                    ..group_line.0 + intersection.end() - group_line.1,
-            );
-        }
-    }
-
-    return new_ranges;
+fn find_destination_from_source(source: i64, group: &[(i64, i64, i64)]) -> i64 {
+    group
+        .iter()
+        .find(|&(_, start, length)| source >= *start && source < start + *length)
+        .map_or(source, |&(destination, start, _)| {
+            destination + (source - start)
+        })
 }
