@@ -37,20 +37,6 @@ fn part2(input: &str) {
     println!("{}", sum);
 }
 
-fn find_largest_number_in_line_and_position(line: &str) -> (u32, usize) {
-    const RADIX: u32 = 10;
-
-    for number in (1..=9).rev() {
-        for (line_char_index, line_char) in line.chars().enumerate() {
-            if number == line_char.to_digit(RADIX).unwrap() {
-                return (number, line_char_index);
-            }
-        }
-    }
-
-    return (0, 0);
-}
-
 fn find_largest_possible_number_from_string(line: &str, numbers_to_find: usize) -> i64 {
     let mut built_number = String::new();
     let mut absolute_position = 0;
@@ -73,4 +59,18 @@ fn find_largest_possible_number_from_string(line: &str, numbers_to_find: usize) 
     }
 
     return built_number.parse::<i64>().unwrap();
+}
+
+fn find_largest_number_in_line_and_position(line: &str) -> (u32, usize) {
+    const RADIX: u32 = 10;
+
+    for number in (1..=9).rev() {
+        for (line_char_index, line_char) in line.chars().enumerate() {
+            if number == line_char.to_digit(RADIX).unwrap() {
+                return (number, line_char_index);
+            }
+        }
+    }
+
+    return (0, 0);
 }
