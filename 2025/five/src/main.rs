@@ -30,7 +30,7 @@ fn main() -> Result<()> {
 }
 
 fn part1(id_ranges: &Vec<(i64, i64)>, ids: &Vec<i64>) -> Result<()> {
-    let fresh_ids: i64 = ids
+    let fresh_ids = ids
         .iter()
         .filter(|id| {
             let res = id_ranges
@@ -42,8 +42,7 @@ fn part1(id_ranges: &Vec<(i64, i64)>, ids: &Vec<i64>) -> Result<()> {
                 None => false,
             }
         })
-        .map(|_| 1)
-        .sum();
+        .count();
 
     println!("{}", fresh_ids);
 
@@ -62,27 +61,13 @@ fn part2(id_ranges: &Vec<(i64, i64)>) -> Result<()> {
 }
 
 fn merge_overlapping_ranges(ranges: &Vec<(i64, i64)>) -> Vec<(i64, i64)> {
-    if ranges.is_empty() {
-        return Vec::new();
-    }
-
-    let mut normalized: Vec<(i64, i64)> = ranges
-        .iter()
-        .map(|&(start, end)| {
-            if start <= end {
-                (start, end)
-            } else {
-                (end, start)
-            }
-        })
-        .collect();
-
-    normalized.sort_by_key(|&(start, _)| start);
+    let mut ranges_copy = ranges.clone();
+    ranges_copy.sort_by_key(|&(start, _)| start);
 
     let mut merged = Vec::new();
-    let mut current = normalized[0];
+    let mut current = ranges_copy[0];
 
-    for &(start, end) in normalized.iter().skip(1) {
+    for &(start, end) in ranges_copy.iter().skip(1) {
         if start <= current.1 + 1 {
             current.1 = current.1.max(end);
         } else {
